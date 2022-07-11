@@ -24,7 +24,7 @@
 # Version by:  Rafael Anicet Zanini
 # Github:      https://github.com/larocs/EMG-GAN
 
-from keras.utils import plot_model
+#from keras.utils import plot_model
 from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Lambda
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers import Input, Dense, Flatten, Activation, Dropout, LSTM, RepeatVector, TimeDistributed, ConvLSTM2D, GRU
@@ -42,14 +42,14 @@ with warnings.catch_warnings():
 
 class Generator():
 
-    def __init__(self, args, training = False):
-        self.noise_dim = args['noise_dim']
-        self.channels = args['channels']
-        self.conv_activation = args['conv_activation']
-        self.activation_function = args['activation_function']
-        self.num_steps = args['num_steps']
+    def __init__(self, noise_dim, channels, num_steps, training = False):
+        self.noise_dim = noise_dim
+        self.channels = channels
+        self.conv_activation = "relu"
+        self.activation_function = "tanh"
+        self.num_steps = num_steps
         self.seq_shape = (self.num_steps, self.channels)
-        self.sliding_window = args['sliding_window']
+        self.sliding_window = 0 #10 THIS WAS ADDED FOR SMOOTHING THEIR DATA - OURS IS ALREADY SMOOTH BY OUR PREPROCESSING
         self.training_mode = training
         self.model = self.build_generator()
     
@@ -117,8 +117,8 @@ class Generator():
             with open('./output/generator.json', "w") as json_file:
                 json_file.write(model_json)
                 
-            file_name = './output/generator.png'
-            plot_model(model, to_file=file_name, show_shapes = True)        
+            #file_name = './output/generator.png'
+            #plot_model(model, to_file=file_name, show_shapes = True)
     
         return model
     
@@ -139,4 +139,3 @@ class Generator():
     
     def predict(self, args):
         return self.model.predict(args)
-    

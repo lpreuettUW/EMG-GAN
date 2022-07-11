@@ -25,8 +25,8 @@
 # Github:      https://github.com/larocs/EMG-GAN
 
 import keras
-from keras.utils import plot_model
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Lambda
+#from keras.utils import plot_model
+from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Lambda, Layer, InputSpec
 from keras.layers import BatchNormalization, Activation, ZeroPadding2D
 from keras.layers import Input, Dense, Flatten, Activation, Dropout, LSTM, RepeatVector, TimeDistributed, ConvLSTM2D, GRU
 from keras.layers import Add, Subtract, Multiply, ReLU, ThresholdedReLU, Concatenate, GlobalAveragePooling1D, GlobalMaxPooling1D, GlobalAvgPool1D
@@ -36,7 +36,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model
 from keras import backend as K
-from keras.engine import InputSpec, Layer
+#from keras.engine import InputSpec, Layer
 from keras import initializers, regularizers, constraints
 import numpy as np
 import pywt
@@ -164,30 +164,30 @@ class MinibatchDiscrimination(Layer):
         return dict(list(base_config.items()) + list(config.items()))
 
 
-class Discriminator():
-    def __init__(self, args, training = False):
-        self.noise_dim = args['noise_dim']
-        self.channels = args['channels']
-        self.conv_activation = args['conv_activation']
-        self.num_steps = args['num_steps']
+class Discriminator:
+    def __init__(self, noise_dim, channels, num_steps, training = False):
+        self.noise_dim = noise_dim
+        self.channels = channels
+        self.conv_activation = "relu"
+        self.num_steps = num_steps
         self.seq_shape = (self.num_steps, self.channels)
         self.training_mode = training
 
-        self.dropout_rate = args['dropout_rate']  # Dropout rate
+        self.dropout_rate = 0.2
 
         # Define parameters for wavelet decomposition
-        self.wavelet_mother = args['wavelet_mother'] 
-        self.wavelet_levels = args['wavelet_levels'] 
-        self.wavelet_trainable= args['wavelet_trainable']
-        self.use_mini_batch = args['use_mini_batch']
+        self.wavelet_mother = "db7"
+        self.wavelet_levels = 2
+        self.wavelet_trainable = False
+        self.use_mini_batch = True
 
-        self.sliding_window = args['sliding_window']
-        self.activation_function = args["activation_function"]
-        self.moving_avg_window = args["moving_avg_window"]
+        self.sliding_window = 10
+        self.activation_function = "tanh"
+        self.moving_avg_window = 100
         self.model = self.build_critic()
         
     def make_wavelet_expansion(self, input_tensor):
-        low_pass, high_pass  = pywt.Wavelet(self.wavelet_mother).filter_bank[:2]
+        low_pass, high_pass = pywt.Wavelet(self.wavelet_mother).filter_bank[:2]
         low_pass_filter = np.array(low_pass)
         high_pass_filter = np.array(high_pass)
         n_levels = self.wavelet_levels
@@ -236,7 +236,7 @@ class Discriminator():
             z (tensor): sampled latent vector
         """
         input_ = args
-        abs_envelope = K.abs(input_)
+        #abs_envelope = K.abs(input_) # NOT USED
         envelope = tf.contrib.signal.frame(
             input_,
             self.moving_avg_window,
@@ -296,6 +296,7 @@ class Discriminator():
         fft_cnn_4 = Flatten()(fft_cnn_4)
                 
         #CNN on FFT of envelope
+        # TODO: I dont think envelopes will be helpful for our application - we dont need additional smoothing
         envelope_window = Lambda(self.envelopes, output_shape=self.seq_shape, name='envelope')(input_)
         envelope_window = Flatten()(envelope_window)
         envelope_fft = Lambda(tf.spectral.rfft)(envelope_window)
@@ -357,8 +358,8 @@ class Discriminator():
             print('Critic model:')
             model.summary()
             
-            file_name = './output/critic.png'
-            plot_model(model, to_file=file_name, show_shapes = True)
+            #file_name = './output/critic.png'
+            #plot_model(model, to_file=file_name, show_shapes = True)
         
         return model
     

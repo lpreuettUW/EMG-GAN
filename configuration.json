@@ -18,7 +18,7 @@
 	"wavelet_levels": 2, 
 	"wavelet_trainable": false, 
 	"use_mini_batch": true,
-	"sliding_window": 10,	
+	"sliding_window": 10,
 	"loss_function": "binary_crossentropy",
 	"optimizer": "adam",
 	"metrics": ["accuracy"],
@@ -28,7 +28,7 @@
 	"sample_interval": 1000,
 	"epochs": 5000,
 	"batch_size": 100,
-	"save_sample": false,
-	"plot_losses": false,
+	"save_sample": true,
+	"plot_losses": true,
 	"save_models": false
 }

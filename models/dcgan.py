@@ -27,7 +27,8 @@
 
 from __future__ import print_function, division
 
-from keras.optimizers import RMSprop, Adam
+import keras.optimizers
+#from keras.optimizers import RMSprop, Adam
 from keras import Model, Sequential
 from keras.layers import Input
 import keras.backend as K
@@ -48,31 +49,29 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=FutureWarning)
     import tensorflow as tf
 
-
 class DCGAN():
-    def __init__(self, args, training = False):
-        
+    def __init__(self, noise_dim, output_shape, training = False):
         # Define parameters for training
-        self.learning_rate = args["learning_rate"]  # Learning rate
-        self.loss_function = args["loss_function"]  # loss_function
-        self.metrics = args["metrics"] # metrics
-        self.channels = args['channels']
-        self.batch_size = args['batch_size']
-        self.num_steps = args['num_steps']
+        self.learning_rate = 0.0002
+        self.loss_function = "binary_crossentropy"
+        self.metrics = ["accuracy"]
+        self.channels = 1
+        self.batch_size = 128
+        self.num_steps = output_shape # this is output shape
         self.seq_shape = (self.num_steps, self.channels)
-        self.noise_dim = args["noise_dim"] # metrics
-        self.use_random_noise = args["use_random_noise"]
+        self.noise_dim = noise_dim # this is the input shape
+        self.use_random_noise = False # TODO: was True - pretty sure we want False (which means use real data)
         self.training_mode = training
 
         # Following parameter and optimizer set as recommended in paper
-        self.optimizer = Adam(lr=self.learning_rate)
+        self.optimizer = keras.optimizers.adam_v2.Adam(lr=self.learning_rate)
 
         # Build and compile the critic
-        self.critic = Discriminator(args, training)
+        self.critic = Discriminator(self.noise_dim, self.channels, self.num_steps, training)
         self.critic.model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
 
         # Build the generator
-        self.generator = Generator(args, training)
+        self.generator = Generator(self.noise_dim, self.channels, self.num_steps, training)
         
         # Build de combined model (generator => critic)
 

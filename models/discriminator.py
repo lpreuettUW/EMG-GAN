@@ -276,7 +276,7 @@ class Discriminator:
         cnn_4 = Flatten()(cnn_4)
         
         #CNN on FFT of raw signal
-        fft = Lambda(tf.spectral.rfft)(flat)
+        fft = Lambda(tf.signal.rfft)(flat)
         fft_abs = Lambda(K.abs)(fft)
         fft_abs = Reshape((-1,1), name='fft_abs')(fft_abs)
         fft_cnn_1 = Conv1D(16, kernel_size=3, strides=2, padding="same", name='fft_conv_1')(fft_abs)

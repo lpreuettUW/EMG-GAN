@@ -38,7 +38,7 @@ class DataLoader():
                 yield self.train_data[batch_start_idx:]
 
     def get_target_seq_len(self):
-        return self.df['padded_data'].to_numpy().shape[1]
+        return np.vstack(self.df['padded_data'].to_numpy()).shape[1]
 
 # class DataLoader():
 #     def __init__(self, args):

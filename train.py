@@ -17,7 +17,7 @@ def train(args):
     # Create a new DCGAN object
     dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
-    verbose = True
+    verbose = False
 
     if verbose:
         print(f'args: {args}')

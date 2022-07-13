@@ -125,7 +125,7 @@ class DCGAN:
         np.savetxt(os.path.join(output_dir, '.Reference_' + str(epoch) + '.csv'), ref_signal, delimiter=",")
         
         #Plot the generated signals with epoch
-        plot_prediction(gen_signal, epoch)
+        plot_prediction(gen_signal, output_dir, epoch)
         return gen_signal
 
     def generate_noise(self, signals):

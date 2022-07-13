@@ -20,7 +20,7 @@ class DataLoader():
         np.random.shuffle(self.train_data)
 
     def get_batches(self):
-        num_batches = np.ceil(self.train_data.shape[0] / self.batch_size)
+        num_batches = int(np.ceil(self.train_data.shape[0] / self.batch_size))
         for batch_idx in range(num_batches):
             batch_start_idx = self.batch_size * batch_idx
             if batch_idx < num_batches - 1:

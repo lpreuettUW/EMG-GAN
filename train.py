@@ -92,6 +92,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Train')
 
     parser.add_argument('data_dir', help='input data directory', type=str)
+    parser.add_argument('output_dir', help='dir to store all output', type=str)
     #parser.add_argument('--config_json', '-config', default='configuration.json', type=str, help='configuration json file path')
     parser.add_argument('--dataset', type=str, choices=['JL', 'JY', 'LP', 'VB'], default='JL')  # JL JY LP VB
     parser.add_argument('--finger', type=str, choices=['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'])

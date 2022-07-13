@@ -11,7 +11,7 @@ class DataLoader():
     def __init__(self, args):
         self.batch_size = args.batch_size
         self.df = load_pickled_data(args.data_dir, args.dataset)
-        self.df = self.df[self.df['finger'] == args.finger] # filter by finger
+        self.df = self.df[self.df['class'] == args.finger] # filter by finger
 
     def load_fold(self, fold: int):
         self.train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)

@@ -35,12 +35,13 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model
 import keras.backend as K
+import os
 import warnings 
 with warnings.catch_warnings():  
     warnings.filterwarnings("ignore",category=FutureWarning)
     import tensorflow as tf
 
-class Generator():
+class Generator:
 
     def __init__(self, noise_dim, channels, num_steps, training = False):
         self.noise_dim = noise_dim
@@ -76,7 +77,7 @@ class Generator():
         mvg_avg = K.mean(sliding_reshaped, axis=2, keepdims=True)
         return mvg_avg
     
-    def build_generator(self):
+    def build_generator(self, output_dir):
     
         model = Sequential()
         model.add(Reshape((self.noise_dim,self.channels), input_shape=(self.noise_dim,)))
@@ -114,7 +115,7 @@ class Generator():
             model.summary()
             model_json = model.to_json()
             
-            with open('./output/generator.json', "w") as json_file:
+            with open(os.path.join(output_dir, 'generator.json'), "w") as json_file:
                 json_file.write(model_json)
                 
             #file_name = './output/generator.png'
@@ -122,18 +123,18 @@ class Generator():
     
         return model
     
-    def save(self, index=-1):
+    def save(self, output_dir, index=-1):
         if index == -1:
-            file_path = './saved_models/generator.h5'
+            file_path = os.path.join(output_dir, 'generator.h5')
         else:
-            file_path = './saved_models/generator_' + str(index) + '.h5'
+            file_path = os.path.join(output_dir, f'generator_k{index}.h5')
         self.model.save_weights(file_path)
     
-    def load(self, index=-1):
+    def load(self, import_dir, index=-1):
         if index == -1:
-            file_path = './saved_models/generator.h5'
+            file_path = os.path.join(import_dir, 'generator.h5')
         else:
-            file_path = './saved_models/generator_' + str(index) + '.h5'
+            file_path = os.path.join(import_dir, f'generator_k{index}.h5')
         self.model = self.build_generator()
         self.model.load_weights(file_path)
     

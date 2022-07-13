@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
-def plot_losses(metrics, epoch):
+def plot_losses(metrics, epoch, output_dir):
     losses = np.array(metrics)
     plt.plot(losses[:,0], label='Discriminator')
     plt.plot(losses[:,1], label='Generator')
@@ -9,7 +10,7 @@ def plot_losses(metrics, epoch):
     plt.xlabel('Epoch')
     plt.ylabel('Loss/Metric')
     plt.legend()
-    plt.savefig('./output/Losses_{}.png'.format(epoch))
+    plt.savefig(os.path.join(output_dir, 'Losses_{}.png'.format(epoch)))
     #plt.show()
     plt.close()
             
@@ -19,7 +20,7 @@ def plot_losses(metrics, epoch):
     plt.xlabel('Epoch')
     plt.ylabel('FFT MSE')
     plt.legend()
-    plt.savefig('./output/FFT_{}.png'.format(epoch))
+    plt.savefig(os.path.join(output_dir, 'FFT_{}.png'.format(epoch)))
     #plt.show()
     plt.close()
     
@@ -29,7 +30,7 @@ def plot_losses(metrics, epoch):
     plt.xlabel('Epoch')
     plt.ylabel('DTW Distance')
     plt.legend()
-    plt.savefig('./output/DTW_{}.png'.format(epoch))
+    plt.savefig(os.path.join(output_dir, 'DTW_{}.png'.format(epoch)))
     #plt.show()
     plt.close()
     
@@ -39,11 +40,11 @@ def plot_losses(metrics, epoch):
     plt.xlabel('Epoch')
     plt.ylabel('Cross-correlation')
     plt.legend()
-    plt.savefig('./output/Cross_correlation_{}.png'.format(epoch))
+    plt.savefig(os.path.join(output_dir, 'Cross_correlation_{}.png'.format(epoch)))
     #plt.show()
     plt.close()
         
-def plot_prediction(signal, epoch = 0):
+def plot_prediction(signal, output_dir, epoch = 0):
     plt.figure()
     axes = plt.gca()
     axes.set_ylim([-1.0,1.0])
@@ -51,11 +52,11 @@ def plot_prediction(signal, epoch = 0):
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')
     plt.legend()
-    plt.savefig('./output/Generated_' + str(epoch) + '.png')
+    plt.savefig(os.path.join(output_dir, '/Generated_' + str(epoch) + '.png'))
     #plt.show()
     plt.close()
     
-def plot_reference(signal, epoch):
+def plot_reference(signal, output_dir, epoch):
     plt.figure()
     axes = plt.gca()
     axes.set_ylim([-1.0,1.0])
@@ -63,7 +64,7 @@ def plot_reference(signal, epoch):
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')
     plt.legend()
-    plt.savefig('./output/Reference_' + str(epoch) + '.png')
+    plt.savefig(os.path.join(output_dir, '/Reference_' + str(epoch) + '.png'))
     #plt.show()
     plt.close()
 

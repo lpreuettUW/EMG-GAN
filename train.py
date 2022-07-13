@@ -74,7 +74,7 @@ def train(args):
                 # If at save interval => save generated image samples
                 if epoch % sample_interval == 0:
                     #if config["save_sample"]:
-                    dcgan.save_sample(epoch, signals)
+                    dcgan.save_sample(args.output_dir, epoch, signals)
 
                     # if config["plot_losses"]:
                     #     plot_losses(metrics, epoch)
@@ -83,10 +83,10 @@ def train(args):
                     #     dcgan.save_critic(epoch)
                     #     dcgan.save_generator(epoch)
 
-        dcgan.save_sample(epoch, signals)
-        dcgan.save_critic()
-        dcgan.save_generator()
-        plot_losses(metrics, epoch)
+        dcgan.save_sample(args.output_dir, epoch, signals)
+        dcgan.save_critic(args.output_dir, kfold_k)
+        dcgan.save_generator(args.output_dir, kfold_k)
+        plot_losses(metrics, epoch, args.output_dir)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Train')

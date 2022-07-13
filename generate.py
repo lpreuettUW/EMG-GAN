@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 import json
+import os
 from utils.plot_utils import plot_prediction
 from utils.plot_utils import plot_reference
 from models.dcgan import DCGAN
@@ -38,10 +39,10 @@ def generate(args):
     validated = dcgan.critic.predict(gen_signal)
 
     # Plot and save prediction
-    plot_prediction(gen_signal)
+    plot_prediction(gen_signal, args.output_dir)
     gen_signal = np.reshape(gen_signal, (gen_signal.shape[0],gen_signal.shape[1]))
-    np.savetxt('./output/generated_signal.csv', gen_signal, delimiter=",")
-	
+    np.savetxt(os.path.join(args.output_dir, 'generated_signal.csv', gen_signal, delimiter=","))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Generate EMG signals based on pre-trained model')

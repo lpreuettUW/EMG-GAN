@@ -40,6 +40,7 @@ from keras import backend as K
 from keras import initializers, regularizers, constraints
 import numpy as np
 import pywt
+import os
 
 import warnings 
 with warnings.catch_warnings():  
@@ -363,18 +364,18 @@ class Discriminator:
         
         return model
     
-    def save(self, index=-1):
+    def save(self, output_dir, index=-1):
         if index == -1:
-            file_path = './saved_models/critic.h5'
+            file_path = os.path.join(output_dir, f'critic.h5')
         else:
-            file_path = './saved_models/critic_' + str(index) + '.h5'
+            file_path = os.path.join(output_dir, f'critic_k{index}.h5')
         self.model.save_weights(file_path)
     
-    def load(self, index=-1):
+    def load(self, import_dir, index=-1):
         if index == -1:
-            file_path = './saved_models/critic.h5'
+            file_path = os.path.join(import_dir, 'critic.h5')
         else:
-            file_path = './saved_models/critic_' + str(index) + '.h5'
+            file_path = os.path.join(import_dir, f'critic_k{index}.h5')
         self.model = self.build_critic()
         self.model.load_weights(file_path)
     

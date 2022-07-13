@@ -16,12 +16,13 @@ class DataLoader():
         self.train_data = None
 
     def load_fold(self, fold: int):
+        def normalize_seq(seq: np.array) -> np.array:
+            min_val = np.min(seq)
+            max_val = np.max(seq)
+            return (seq - min_val) / (max_val - min_val)
+
         train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
-        samples = list()
-        for sample in train_data:
-            for idx in range(sample.shape[0] - self.noise_dim):
-                samples.append(sample[idx : idx + self.noise_dim])
-        self.train_data = np.expand_dims(np.array(samples), axis=2)
+        self.train_data = np.vectorize(normalize_seq, signature='(n)->(k)')(train_data)
 
     def shuffle(self):
         np.random.shuffle(self.train_data)

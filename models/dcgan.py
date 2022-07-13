@@ -60,7 +60,7 @@ class DCGAN:
         self.num_steps = output_shape # this is output shape
         self.seq_shape = (self.num_steps, self.channels)
         self.noise_dim = noise_dim # this is the input shape
-        self.use_random_noise = False # TODO: was True - pretty sure we want False (which means use real data)
+        self.use_random_noise = False
         self.training_mode = training
 
         # Following parameter and optimizer set as recommended in paper
@@ -139,6 +139,7 @@ class DCGAN:
             noise = 0.1 * np.random.random_sample((self.batch_size,self.noise_dim)) + 0.9 * np.sin(x)
         # Sample input data as generator input
         else:
-            noise = signals[:,0:self.noise_dim,:]
+            start_idx = np.random.randint(low=0, high=signals.shape[1] - self.noise_dim)
+            noise = signals[:, start_idx : start_idx + self.noise_dim, :]
             noise = np.reshape(noise,(noise.shape[0],noise.shape[1]))
         return noise

@@ -21,6 +21,8 @@ def train(args):
     valid = np.ones((batch_size, 1))
     fake = np.zeros((batch_size, 1))
 
+    verbose = True
+
     for kfold_k in range(5):
         print(f'k fold: {kfold_k}')
         data_loader.load_fold(kfold_k)
@@ -30,12 +32,21 @@ def train(args):
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
             for signals in data_loader.get_batches():
+                if verbose:
+                    print(f'batch shape {signals.shape}')
                 # Generate latent noise for generator
                 noise = dcgan.generate_noise(signals)
+
+                if verbose:
+                    print(f'noise shape {noise.shape}')
 
                 # Generate a batch of new fake signals and evaluate them against the discriminator
                 gen_signal = dcgan.generator.predict(noise)
                 validated = dcgan.critic.predict(gen_signal)
+
+                if verbose:
+                    print(f'gen signal shape {gen_signal.shape}')
+                    print(f'validated shape {validated.shape}')
 
                 #Sample real and fake signals
 
@@ -51,6 +62,11 @@ def train(args):
 
                 generated = gen_signal[metrics_index].flatten()
                 reference = signals[metrics_index].flatten()
+
+                if verbose:
+                    print(f'flattened generated shape {generated.shape}')
+                    print(f'flattened reference shape {reference.shape}')
+
                 fft_metric, fft_ref, fft_gen = loss_fft(reference, generated)
                 dtw_metric = dtw_distance(reference, generated)
                 cc_metric = cross_correlation(reference, generated)

@@ -15,7 +15,7 @@ def train(args):
     data_loader = DataLoader(args)
 
     # Create a new DCGAN object
-    dcgan = DCGAN(args.noise_dim, int(data_loader.get_avg_sample_len()), training=True)
+    dcgan = DCGAN(args.noise_dim, int(data_loader.get_avg_sample_len()), args.output_dir, training=True)
 
     # Adversarial ground truths
     valid = np.ones((batch_size, 1))

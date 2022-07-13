@@ -43,7 +43,7 @@ with warnings.catch_warnings():
 
 class Generator:
 
-    def __init__(self, noise_dim, channels, num_steps, training = False):
+    def __init__(self, noise_dim, channels, num_steps, output_dir, training = False):
         self.noise_dim = noise_dim
         self.channels = channels
         self.conv_activation = "relu"
@@ -52,7 +52,7 @@ class Generator:
         self.seq_shape = (self.num_steps, self.channels)
         self.sliding_window = 0 #10 THIS WAS ADDED FOR SMOOTHING THEIR DATA - OURS IS ALREADY SMOOTH BY OUR PREPROCESSING
         self.training_mode = training
-        self.model = self.build_generator()
+        self.model = self.build_generator(output_dir)
     
     def moving_avg(self, args):
         """Reparameterization trick by sampling fr an isotropic unit Gaussian.

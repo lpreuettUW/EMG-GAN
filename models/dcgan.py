@@ -49,8 +49,8 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore",category=FutureWarning)
     import tensorflow as tf
 
-class DCGAN():
-    def __init__(self, noise_dim, output_shape, training = False):
+class DCGAN:
+    def __init__(self, noise_dim, output_shape, output_dir, training = False):
         # Define parameters for training
         self.learning_rate = 0.0002
         self.loss_function = "binary_crossentropy"
@@ -71,7 +71,7 @@ class DCGAN():
         self.critic.model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
 
         # Build the generator
-        self.generator = Generator(self.noise_dim, self.channels, self.num_steps, training)
+        self.generator = Generator(self.noise_dim, self.channels, self.num_steps, output_dir, training)
         
         # Build de combined model (generator => critic)
 

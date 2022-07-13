@@ -300,7 +300,7 @@ class Discriminator:
         # TODO: I dont think envelopes will be helpful for our application - we dont need additional smoothing
         envelope_window = Lambda(self.envelopes, output_shape=self.seq_shape, name='envelope')(input_)
         envelope_window = Flatten()(envelope_window)
-        envelope_fft = Lambda(tf.spectral.rfft)(envelope_window)
+        envelope_fft = Lambda(tf.signal.rfft)(envelope_window)
         envelope_fft_abs = Lambda(K.abs)(envelope_fft)
         envelope_fft_abs = Reshape((-1,1))(envelope_fft_abs)
         envelope_cnn_1 = Conv1D(16, kernel_size=3, strides=2, padding="same", name='fft_env_conv_1')(envelope_fft_abs)

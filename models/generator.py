@@ -64,7 +64,7 @@ class Generator:
             z (tensor): sampled latent vector
         """
         input_ = args
-        sliding_window = tf.contrib.signal.frame(
+        sliding_window = tf.signal.frame(
             input_,
             self.sliding_window,
             1,#steps

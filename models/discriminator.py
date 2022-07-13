@@ -238,7 +238,7 @@ class Discriminator:
         """
         input_ = args
         #abs_envelope = K.abs(input_) # NOT USED
-        envelope = tf.contrib.signal.frame(
+        envelope = tf.signal.frame(
             input_,
             self.moving_avg_window,
             1,#steps

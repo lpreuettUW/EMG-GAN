@@ -7,9 +7,9 @@ def get_train_val_split_for_fold(df: pd.DataFrame, kfold: int) -> (np.array, np.
     train_mask = (df['kfold'] != kfold) & (~df['test_data'])
     df.loc[val_mask, 'train_data'] = False
     df.loc[train_mask, 'train_data'] = True
-    val_data = np.expand_dims(np.stack(df[val_mask]['padded_data'].to_numpy()), axis=2)
+    val_data = np.stack(df[val_mask]['padded_data'].to_numpy())
     val_lbls = np.stack(df[val_mask]['class'].to_numpy())
-    train_data = np.expand_dims(np.stack(df[train_mask]['padded_data'].to_numpy()), axis=2)
+    train_data = np.stack(df[train_mask]['padded_data'].to_numpy())
     train_lbls = np.stack(df[train_mask]['class'].to_numpy())
     return train_data, train_lbls, val_data, val_lbls
 

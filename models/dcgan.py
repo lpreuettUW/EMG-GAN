@@ -122,7 +122,7 @@ class DCGAN:
         ref_signal = signals[:,:,:]
         ref_signal = np.reshape(ref_signal, (ref_signal.shape[0], ref_signal.shape[1]))
         plot_reference(ref_signal, output_dir, epoch)
-        np.savetxt(os.path.join(output_dir, '.Reference_' + str(epoch) + '.csv'), ref_signal, delimiter=",")
+        np.savetxt(os.path.join(output_dir, 'Reference_' + str(epoch) + '.csv'), ref_signal, delimiter=",")
         
         #Plot the generated signals with epoch
         plot_prediction(gen_signal, output_dir, epoch)

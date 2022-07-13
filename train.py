@@ -17,10 +17,6 @@ def train(args):
     # Create a new DCGAN object
     dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
-    # Adversarial ground truths
-    valid = np.ones((batch_size, 1))
-    fake = np.zeros((batch_size, 1))
-
     verbose = True
 
     if verbose:
@@ -36,6 +32,10 @@ def train(args):
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
             for signals in data_loader.get_batches():
+                # Adversarial ground truths
+                valid = np.ones((signals.shape[0], 1))
+                fake = np.zeros_like(valid)
+
                 if verbose:
                     print(f'batch shape {signals.shape}')
                 # Generate latent noise for generator

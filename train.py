@@ -15,7 +15,7 @@ def train(args):
     data_loader = DataLoader(args)
 
     # Create a new DCGAN object
-    dcgan = DCGAN(args.noise_dim, int(data_loader.get_avg_sample_len()), args.output_dir, training=True)
+    dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
     # Adversarial ground truths
     valid = np.ones((batch_size, 1))
@@ -25,7 +25,7 @@ def train(args):
 
     if verbose:
         print(f'args: {args}')
-        print(f'target sample size {int(data_loader.get_avg_sample_len())}')
+        print(f'target sample size {int(data_loader.get_target_seq_len())}')
 
     for kfold_k in range(5):
         print(f'k fold: {kfold_k}')

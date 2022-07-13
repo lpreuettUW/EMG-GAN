@@ -36,8 +36,8 @@ class DataLoader():
             else:
                 yield self.train_data[batch_start_idx:]
 
-    def get_avg_sample_len(self):
-        return self.df['data'].apply(len).mean()
+    def get_target_seq_len(self):
+        return self.train_data.shape[1] if self.train_data is not None else 0
 
 # class DataLoader():
 #     def __init__(self, args):

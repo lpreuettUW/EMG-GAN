@@ -9,7 +9,7 @@ from utils.pickled_data_utilities import load_pickled_data, get_train_val_split_
 
 class DataLoader():
     def __init__(self, args):
-        self.batch_size = args['batch_size']
+        self.batch_size = args.batch_size
         self.df = load_pickled_data(args.input_dir, args.dataset)
         self.df = self.df[self.df['finger'] == args.finger] # filter by finger
 

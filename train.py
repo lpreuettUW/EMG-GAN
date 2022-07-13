@@ -7,7 +7,7 @@ from utils.plot_utils import plot_losses
 from utils.data_utils import DataLoader
 
 def train(args):
-    batch_size = 128
+    batch_size = args.batch_size
     sample_interval = 1000
     #plot_losses_flag = False
 
@@ -97,6 +97,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, choices=['JL', 'JY', 'LP', 'VB'], default='JL')  # JL JY LP VB
     parser.add_argument('--finger', type=str, choices=['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'])
     parser.add_argument('--gpu', help='set CUDA_VISIBLE_DEVICES environment variable', type=str, default=None)
+    parser.add_argument('--batch_size', help='num samps in each batch', type=int, default=128)
     parser.add_argument('--num_epochs', help='number of training epochs', type=int, default=5000)
     parser.add_argument('--noise_dim', help='number of time steps to generate a synthetic from', type=int, default=200)
 

@@ -106,6 +106,10 @@ if __name__ == "__main__":
     if args.gpu is not None:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
+    args.output_dir = os.path.join(args.output_dir, args.dataset, args.finger)
+    if not os.path.isdir(args.output_dir):
+        os.makedirs(args.output_dir)
+
     #config_file = args.config_json
     # with open(config_file) as json_file:
     #     config = json.load(json_file)

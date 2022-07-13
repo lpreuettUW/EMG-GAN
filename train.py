@@ -23,6 +23,10 @@ def train(args):
 
     verbose = True
 
+    if verbose:
+        print(f'args: {args}')
+        print(f'target sample size {int(data_loader.get_avg_sample_len())}')
+
     for kfold_k in range(5):
         print(f'k fold: {kfold_k}')
         data_loader.load_fold(kfold_k)

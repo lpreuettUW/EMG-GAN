@@ -46,10 +46,13 @@ def train(args):
 
                 # Generate a batch of new fake signals and evaluate them against the discriminator
                 gen_signal = dcgan.generator.predict(noise)
-                validated = dcgan.critic.predict(gen_signal)
 
                 if verbose:
                     print(f'gen signal shape {gen_signal.shape}')
+
+                validated = dcgan.critic.predict(gen_signal)
+
+                if verbose:
                     print(f'validated shape {validated.shape}')
 
                 #Sample real and fake signals

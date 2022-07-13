@@ -9,12 +9,19 @@ from utils.pickled_data_utilities import load_pickled_data, get_train_val_split_
 
 class DataLoader():
     def __init__(self, args):
+        self.noise_dim = args.noise_dim
         self.batch_size = args.batch_size
         self.df = load_pickled_data(args.data_dir, args.dataset)
         self.df = self.df[self.df['class'] == args.finger] # filter by finger
+        self.train_data = None
 
     def load_fold(self, fold: int):
-        self.train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
+        train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
+        samples = list()
+        for sample in train_data:
+            for idx in range(sample.shape[0] - self.noise_dim):
+                samples.append(sample[idx : idx + self.noise_dim])
+        self.train_data = np.expand_dims(np.array(samples), axis=2)
 
     def shuffle(self):
         np.random.shuffle(self.train_data)

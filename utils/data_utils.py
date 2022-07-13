@@ -38,7 +38,7 @@ class DataLoader():
                 yield self.train_data[batch_start_idx:]
 
     def get_target_seq_len(self):
-        return self.train_data.shape[1] if self.train_data is not None else 0
+        return self.df['padded_data'].to_numpy().shape[1]
 
 # class DataLoader():
 #     def __init__(self, args):

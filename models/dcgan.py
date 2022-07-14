@@ -64,11 +64,12 @@ class DCGAN:
         self.training_mode = training
 
         # Following parameter and optimizer set as recommended in paper
+        self.disc_optimizer = keras.optimizers.adam_v2.Adam(lr=self.learning_rate / 10)
         self.optimizer = keras.optimizers.adam_v2.Adam(lr=self.learning_rate)
 
         # Build and compile the critic
         self.critic = Discriminator(self.noise_dim, self.channels, self.num_steps, training)
-        self.critic.model.compile(loss=self.loss_function, optimizer=self.optimizer, metrics=self.metrics)
+        self.critic.model.compile(loss=self.loss_function, optimizer=self.disc_optimizer, metrics=self.metrics)
 
         # Build the generator
         self.generator = Generator(self.noise_dim, self.channels, self.num_steps, output_dir, training)

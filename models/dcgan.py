@@ -52,7 +52,7 @@ with warnings.catch_warnings():
 class DCGAN:
     def __init__(self, noise_dim, output_shape, output_dir, training = False):
         # Define parameters for training
-        self.learning_rate = 0.002
+        self.learning_rate = 0.0002
         self.loss_function = "binary_crossentropy"
         self.metrics = ["accuracy"]
         self.channels = 1

@@ -91,7 +91,7 @@ def train(args):
                 # ---------------------
                 g_loss = dcgan.combined.train_on_batch(noise, valid) #train combined model
 
-                score = fft_metric / 200 + 1 / dtw_metric + cc_metric / 200
+                score = 1 / fft_metric + 1 / dtw_metric + cc_metric / 200
                 if best_score is None or score > best_score:
                     best_score = score
                     dcgan.save_critic(args.output_dir, kfold_k)

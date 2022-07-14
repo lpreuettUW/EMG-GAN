@@ -139,7 +139,7 @@ class DCGAN:
             noise = 0.1 * np.random.random_sample((self.batch_size,self.noise_dim)) + 0.9 * np.sin(x)
         # Sample input data as generator input
         else:
-            start_idx = np.random.randint(low=0, high=signals.shape[1] - self.noise_dim)
+            start_idx = signals.shape[1] - self.noise_dim #np.random.randint(low=0, high=signals.shape[1] - self.noise_dim)
             noise = signals[:, start_idx : start_idx + self.noise_dim, :]
             noise = np.reshape(noise,(noise.shape[0],noise.shape[1]))
         return noise

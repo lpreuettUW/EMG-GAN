@@ -7,7 +7,6 @@ from utils.plot_utils import plot_losses
 from utils.data_utils import DataLoader
 
 def train(args):
-    batch_size = args.batch_size
     sample_interval = 1000
     #plot_losses_flag = False
 

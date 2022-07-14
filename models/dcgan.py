@@ -64,8 +64,8 @@ class DCGAN:
         self.training_mode = training
 
         # Following parameter and optimizer set as recommended in paper
-        self.disc_optimizer = keras.optimizers.adam_v2.Adam(lr=self.learning_rate / 3)
-        self.optimizer = keras.optimizers.adam_v2.Adam(lr=self.learning_rate)
+        self.disc_optimizer = keras.optimizers.adam_v2.Adam(lr=2e-4)
+        self.optimizer = keras.optimizers.adam_v2.Adam(lr=2e-3)
 
         # Build and compile the critic
         self.critic = Discriminator(self.noise_dim, self.channels, self.num_steps, training)

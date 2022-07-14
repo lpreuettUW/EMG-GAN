@@ -44,7 +44,7 @@ def plot_losses(metrics, epoch, output_dir):
     #plt.show()
     plt.close()
         
-def plot_prediction(signal, output_dir, epoch = 0):
+def plot_prediction(signal, output_dir, kfold, epoch = 0):
     plt.figure()
     axes = plt.gca()
     axes.set_ylim([-1.0,1.0])
@@ -52,11 +52,11 @@ def plot_prediction(signal, output_dir, epoch = 0):
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'Generated_' + str(epoch) + '.png'))
+    plt.savefig(os.path.join(output_dir, 'Generated_' + str(epoch) + '_' + str(kfold) + '.png'))
     #plt.show()
     plt.close()
     
-def plot_reference(signal, output_dir, epoch):
+def plot_reference(signal, output_dir, kfold, epoch):
     plt.figure()
     axes = plt.gca()
     axes.set_ylim([-1.0,1.0])
@@ -64,7 +64,7 @@ def plot_reference(signal, output_dir, epoch):
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'Reference_' + str(epoch) + '.png'))
+    plt.savefig(os.path.join(output_dir, 'Reference_' + str(epoch) + '_' + str(kfold) + '.png'))
     #plt.show()
     plt.close()
 

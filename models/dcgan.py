@@ -101,7 +101,7 @@ class DCGAN:
         self.critic.load(model_dir, index)
 
     
-    def save_sample(self, output_dir, epoch, signals):
+    def save_sample(self, output_dir, epoch, kfold, signals):
         
         # Generate latent noise
         noise = self.generate_noise(signals)
@@ -115,18 +115,18 @@ class DCGAN:
         #Reshape for saving on csv
         gen_signal = np.reshape(gen_signal, (gen_signal.shape[0],gen_signal.shape[1]))
         critic_signal = np.reshape(critic_signal, (critic_signal.shape[0],critic_signal.shape[1]))
-        np.savetxt(os.path.join(output_dir, 'Noise_' + str(epoch) + '.csv'), noise, delimiter=",")
-        np.savetxt(os.path.join(output_dir, 'Generated_' + str(epoch) + '.csv'), gen_signal, delimiter=",")
-        np.savetxt(os.path.join(output_dir, 'Validated_' + str(epoch) + '.csv'), critic_signal, delimiter=",")
+        np.savetxt(os.path.join(output_dir, 'Noise_' + str(epoch) + '_' + str(kfold) + '.csv'), noise, delimiter=",")
+        np.savetxt(os.path.join(output_dir, 'Generated_' + str(epoch) + '_' + str(kfold) + '.csv'), gen_signal, delimiter=",")
+        np.savetxt(os.path.join(output_dir, 'Validated_' + str(epoch) + '_' + str(kfold) + '.csv'), critic_signal, delimiter=",")
         
         #Plot the reference signal
         ref_signal = signals[:,:,:]
         ref_signal = np.reshape(ref_signal, (ref_signal.shape[0], ref_signal.shape[1]))
-        plot_reference(ref_signal, output_dir, epoch)
-        np.savetxt(os.path.join(output_dir, 'Reference_' + str(epoch) + '.csv'), ref_signal, delimiter=",")
+        plot_reference(ref_signal, output_dir, kfold, epoch)
+        np.savetxt(os.path.join(output_dir, 'Reference_' + str(epoch) + '_' + str(kfold) + '.csv'), ref_signal, delimiter=",")
         
         #Plot the generated signals with epoch
-        plot_prediction(gen_signal, output_dir, epoch)
+        plot_prediction(gen_signal, output_dir, kfold, epoch)
         return gen_signal
 
     def generate_noise(self, signals):

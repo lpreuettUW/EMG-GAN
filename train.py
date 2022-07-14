@@ -28,6 +28,8 @@ def train(args):
 
         metrics = []
 
+        best_score = None
+
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
             for signals in data_loader.get_batches():
@@ -89,14 +91,20 @@ def train(args):
                 # ---------------------
                 g_loss = dcgan.combined.train_on_batch(noise, valid) #train combined model
 
+                score = fft_metric / 200 + 1 / dtw_metric + cc_metric / 200
+                if best_score is None or score > best_score:
+                    best_score = score
+                    dcgan.save_critic(args.output_dir, kfold_k)
+                    dcgan.save_generator(args.output_dir, kfold_k)
+
                 # Plot the progress
-                print("%d [D loss: %f, acc: %f] [G loss: %f] [FFT Metric: %f] [DTW Metric: %f] [CC Metric: %f]" % (epoch, d_loss[0], d_loss[1], g_loss, fft_metric, dtw_metric, cc_metric[0]))
+                print("%d [D loss: %f, acc: %f] [G loss: %f] [FFT Metric: %f] [DTW Metric: %f] [CC Metric: %f] [Score: %f]" % (epoch, d_loss[0], d_loss[1], g_loss, fft_metric, dtw_metric, cc_metric[0], score))
                 metrics.append([[d_loss[0]], [g_loss], [fft_metric], [dtw_metric], [cc_metric[0]]])
 
                 # If at save interval => save generated image samples
                 if epoch % sample_interval == 0:
                     #if config["save_sample"]:
-                    dcgan.save_sample(args.output_dir, epoch, signals)
+                    dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
 
                     # if config["plot_losses"]:
                     #     plot_losses(metrics, epoch)
@@ -106,8 +114,8 @@ def train(args):
                     #     dcgan.save_generator(epoch)
 
         dcgan.save_sample(args.output_dir, epoch, signals)
-        dcgan.save_critic(args.output_dir, kfold_k)
-        dcgan.save_generator(args.output_dir, kfold_k)
+        #dcgan.save_critic(args.output_dir, kfold_k)
+        #dcgan.save_generator(args.output_dir, kfold_k)
         plot_losses(metrics, epoch, args.output_dir)
 
 if __name__ == "__main__":

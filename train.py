@@ -7,14 +7,11 @@ from utils.plot_utils import plot_losses
 from utils.data_utils import DataLoader
 
 def train(args):
-    sample_interval = 100
+    sample_interval = 25
     #plot_losses_flag = False
 
     # Create a DataLoader utility object
     data_loader = DataLoader(args)
-
-    # Create a new DCGAN object
-    dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
     verbose = False
 
@@ -26,7 +23,11 @@ def train(args):
         print(f'k fold: {kfold_k}')
         data_loader.load_fold(kfold_k)
 
+        # Create a new DCGAN object
+        dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
+
         metrics = []
+        best_g_loss = None
 
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
@@ -94,17 +95,19 @@ def train(args):
                 metrics.append([[d_loss[0]], [g_loss], [fft_metric], [dtw_metric], [cc_metric[0]]])
 
                 # If at save interval => save generated image samples
-                if epoch % sample_interval == 0:
-                    #if config["save_sample"]:
-                    dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
-                    dcgan.save_critic(args.output_dir, epoch, kfold_k)
-                    dcgan.save_generator(args.output_dir, epoch, kfold_k)
-                    # if config["plot_losses"]:
-                    #     plot_losses(metrics, epoch)
-                    #
-                    # if config["save_models"]:
-                    #     dcgan.save_critic(epoch)
-                    #     dcgan.save_generator(epoch)
+                if epoch > 100:
+                    if epoch % sample_interval == 0:
+                        #if config["save_sample"]:
+                        dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
+                        dcgan.save_critic(args.output_dir, epoch, kfold_k)
+                        dcgan.save_generator(args.output_dir, epoch, kfold_k)
+                    if best_g_loss is not None and g_loss - best_g_loss > 10:
+                        print('early stopping because model is not improving')
+                        break
+
+                if best_g_loss is None or best_g_loss > g_loss:
+                    best_g_loss = g_loss
+
 
         #dcgan.save_sample(args.output_dir, epoch, signals)
         #dcgan.save_critic(args.output_dir, kfold_k)

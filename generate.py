@@ -34,6 +34,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, choices=['JL', 'JY', 'LP', 'VB'], default='JL')  # JL JY LP VB
     parser.add_argument('--finger', type=str, choices=['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'])
     parser.add_argument('--gpu', help='set CUDA_VISIBLE_DEVICES environment variable', type=str, default=None)
+    parser.add_argument('--batch_size', help='num samps in each batch', type=int, default=128) # note just a filler arg - not really used
     parser.add_argument('--noise_dim', help='number of time steps to generate a synthetic from', type=int, default=200)
 
     args = parser.parse_args()

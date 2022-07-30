@@ -27,7 +27,7 @@ def train(args):
         dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
         metrics = []
-        best_g_loss = best_dtws = None
+        #best_g_loss = best_dtws = None
 
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
@@ -102,23 +102,23 @@ def train(args):
                         dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
                         dcgan.save_critic(args.output_dir, epoch, kfold_k)
                         dcgan.save_generator(args.output_dir, epoch, kfold_k)
-                    if (best_dtws is not None and dtw_metric - np.mean(best_dtws) > 10): #(best_g_loss is not None and g_loss - best_g_loss > 0.25) or (best_dtw is not None and dtw_metric - best_dtw > 10):
-                        print('early stopping because model is not improving')
-                        early_stop = True
-
-                    if best_g_loss is None or best_g_loss > g_loss:
-                        best_g_loss = g_loss
-                    if best_dtws is None:
-                        best_dtws = [dtw_metric]
-                    elif len(best_dtws) < 10:
-                        best_dtws.append(dtw_metric)
-                    else:
-                        best_dtws[epoch % 10] = dtw_metric
-
-                if early_stop:
-                    break
-            if early_stop:
-                break
+            #         if (best_dtws is not None and dtw_metric - np.mean(best_dtws) > 10): #(best_g_loss is not None and g_loss - best_g_loss > 0.25) or (best_dtw is not None and dtw_metric - best_dtw > 10):
+            #             print('early stopping because model is not improving')
+            #             early_stop = True
+            #
+            #         if best_g_loss is None or best_g_loss > g_loss:
+            #             best_g_loss = g_loss
+            #         if best_dtws is None:
+            #             best_dtws = [dtw_metric]
+            #         elif len(best_dtws) < 10:
+            #             best_dtws.append(dtw_metric)
+            #         else:
+            #             best_dtws[epoch % 10] = dtw_metric
+            #
+            #     if early_stop:
+            #         break
+            # if early_stop:
+            #     break
 
         #dcgan.save_sample(args.output_dir, epoch, signals)
         #dcgan.save_critic(args.output_dir, kfold_k)

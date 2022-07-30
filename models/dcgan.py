@@ -89,6 +89,38 @@ class DCGAN:
         # The combined model  (stacked generator and critic) - try to minimize the loss
         self.combined = Model(z, valid)
         self.combined.compile(loss='binary_crossentropy', optimizer=self.optimizer)
+
+        self.best_models = {
+            ('Index', 4): 400,
+            ('Index', 3): 425,
+            ('Index', 2): 450,
+            ('Index', 1): 475,
+            ('Index', 0): 400,
+
+            ('Middle', 4): 450,
+            ('Middle', 3): 325,
+            ('Middle', 2): 425,
+            ('Middle', 1): 475,
+            ('Middle', 0): 450,
+
+            ('Ring', 4): 325,
+            ('Ring', 3): 375,
+            ('Ring', 2): 325,
+            ('Ring', 1): 475,
+            ('Ring', 0): 325,
+
+            ('Pinky', 4): 400,
+            ('Pinky', 3): 400,
+            ('Pinky', 2): 400,
+            ('Pinky', 1): 475,
+            ('Pinky', 0): 425,
+
+            ('Thumb', 4): 475,
+            ('Thumb', 3): 475,
+            ('Thumb', 2): 425,
+            ('Thumb', 1): 475,
+            ('Thumb', 0): 450,
+        }
     
     def save_critic(self, output_dir, epoch, index = -1):
         self.critic.save(output_dir, epoch, index)
@@ -96,9 +128,9 @@ class DCGAN:
     def save_generator(self, output_dir, epoch, index = -1):
         self.generator.save(output_dir, epoch, index)
     
-    def load(self, model_dir, index = -1):
-        self.generator.load(model_dir, index)
-        self.critic.load(model_dir, index)
+    def load(self, model_dir, finger, index = -1):
+        self.generator.load(model_dir, self.best_models[(finger, index)], index)
+        self.critic.load(model_dir, self.best_models[(finger, index)], index)
 
     
     def save_sample(self, output_dir, epoch, kfold, signals):

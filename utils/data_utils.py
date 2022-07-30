@@ -21,9 +21,6 @@ class DataLoader():
             max_val = np.max(seq)
             return (seq - min_val) / (max_val - min_val), min_val, max_val
 
-        # TODO: we need to cache the normalized values
-        # TODO: we should train and generate samples in one go maybe?? or write a dataframe / np.arrays with samples and norm values for generation
-
         train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
         #train_data = np.vectorize(normalize_seq, signature='(n)->(k)')(train_data)
 
@@ -33,6 +30,17 @@ class DataLoader():
 
         self.train_data = np.expand_dims(train_data, axis=2)
         self.data_norms = data_norms
+
+    def unnormalize(self, signals):
+        if signals.shape != self.train_data.shape:
+            raise ValueError(f'cannot unnormalize array with shape {signals.shape}. Expected shape {self.train_data.shape}')
+
+        unnormed_signals = np.empty_like(signals)
+        for i in range(signals.shape[0]):
+            min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
+            unnormed_signals[i] = signals[i] * (max_val - min_val) + min_val
+
+        return unnormed_signals
 
     def shuffle(self):
         np.random.shuffle(self.train_data)

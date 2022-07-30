@@ -9,51 +9,40 @@ from models.dcgan import DCGAN
 from utils.data_utils import DataLoader
 
 def generate(args):
-    # Create a new DCGAN object
-    dcgan = DCGAN(config)
-
-    # Load existing model from saved_models folder (you can pass different indexes to see the effect on the generated signal)
-    dcgan.load() #loads the last trained generator
-    #dcgan.load(500)
-    #dcgan.load(1000)
-    #dcgan.load(2000)
-    #dcgan.load(3000)
-
     # Create a DataLoader utility object
-    data_loader = DataLoader(config)
+    data_loader = DataLoader(args)
 
-    #
-    # Generate a batch of new fake signals and evaluate them against the discriminator
-    #
+    for k in range(5):
+        data_loader.load_fold(k)
 
-    # Select a random batch of signals
-    signals = data_loader.get_training_batch()
+        # Create a new DCGAN object
+        dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.data_dir)
 
-    # Generate latent noise for generator
-    noise = dcgan.generate_noise(signals)
+        # Load existing model from saved_models folder (you can pass different indexes to see the effect on the generated signal)
+        dcgan.load(args.data_dir, args.finger, k) #loads the last trained generator
 
-    # Generate prediction
-    gen_signal = dcgan.generator.predict(noise)
-
-    # Evaluate prediction
-    validated = dcgan.critic.predict(gen_signal)
-
-    # Plot and save prediction
-    plot_prediction(gen_signal, args.output_dir, -1)
-    gen_signal = np.reshape(gen_signal, (gen_signal.shape[0],gen_signal.shape[1]))
-    np.savetxt(os.path.join(args.output_dir, 'generated_signal.csv', gen_signal, delimiter=","))
+        noise = dcgan.generate_noise(data_loader.train_data)
+        generated_signals = dcgan.predict(noise)
+        generated_signals = data_loader.unnormalize(generated_signals)
+        np.savetxt(os.path.join(args.data_dir, f'generated_signals_k{k}'), generated_signals)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Generate EMG signals based on pre-trained model')
-        
-    parser.add_argument('--config_json', '-config', default='configuration.json', type=str,
-                        help='configuration json file path')          
+
+    parser.add_argument('data_dir', help='input data directory', type=str)
+    parser.add_argument('--dataset', type=str, choices=['JL', 'JY', 'LP', 'VB'], default='JL')  # JL JY LP VB
+    parser.add_argument('--finger', type=str, choices=['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'])
+    parser.add_argument('--gpu', help='set CUDA_VISIBLE_DEVICES environment variable', type=str, default=None)
+    parser.add_argument('--noise_dim', help='number of time steps to generate a synthetic from', type=int, default=200)
 
     args = parser.parse_args()
 
-    config_file = args.config_json
-    with open(config_file) as json_file:
-        config = json.load(json_file)
+    if args.gpu is not None:
+        os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
-    generate(config)
+    args.data_dir = os.path.join(args.data_dir, args.dataset, args.finger)
+    if not os.path.isdir(args.data_dir):
+        raise ValueError(f'data path DNE: {args.data_dir}')
+
+    generate(args)

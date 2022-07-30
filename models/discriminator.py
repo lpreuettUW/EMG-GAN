@@ -364,18 +364,18 @@ class Discriminator:
         
         return model
     
-    def save(self, output_dir, index=-1):
+    def save(self, output_dir, epoch, index=-1):
         if index == -1:
-            file_path = os.path.join(output_dir, f'critic.h5')
+            file_path = os.path.join(output_dir, f'critic_{epoch}.h5')
         else:
-            file_path = os.path.join(output_dir, f'critic_k{index}.h5')
+            file_path = os.path.join(output_dir, f'critic_{epoch}_k{index}.h5')
         self.model.save_weights(file_path)
     
-    def load(self, import_dir, index=-1):
+    def load(self, import_dir, epoch, index=-1):
         if index == -1:
-            file_path = os.path.join(import_dir, 'critic.h5')
+            file_path = os.path.join(import_dir, f'critic_{epoch}.h5')
         else:
-            file_path = os.path.join(import_dir, f'critic_k{index}.h5')
+            file_path = os.path.join(import_dir, f'critic_{epoch}_k{index}.h5')
         self.model = self.build_critic()
         self.model.load_weights(file_path)
     

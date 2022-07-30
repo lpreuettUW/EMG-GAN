@@ -78,7 +78,7 @@ class Generator:
         return mvg_avg
     
     def build_generator(self, output_dir):
-    
+
         model = Sequential()
         model.add(Reshape((self.noise_dim,self.channels), input_shape=(self.noise_dim,)))
         model.add(Conv1D(128, kernel_size=4, padding="same", data_format="channels_last"))
@@ -123,18 +123,18 @@ class Generator:
     
         return model
     
-    def save(self, output_dir, index=-1):
+    def save(self, output_dir, epoch, index=-1):
         if index == -1:
-            file_path = os.path.join(output_dir, 'generator.h5')
+            file_path = os.path.join(output_dir, f'generator_{epoch}.h5')
         else:
-            file_path = os.path.join(output_dir, f'generator_k{index}.h5')
+            file_path = os.path.join(output_dir, f'generator_{epoch}_k{index}.h5')
         self.model.save_weights(file_path)
     
-    def load(self, import_dir, index=-1):
+    def load(self, import_dir, epoch, index=-1):
         if index == -1:
-            file_path = os.path.join(import_dir, 'generator.h5')
+            file_path = os.path.join(import_dir, f'generator_{epoch}.h5')
         else:
-            file_path = os.path.join(import_dir, f'generator_k{index}.h5')
+            file_path = os.path.join(import_dir, f'generator_{epoch}_k{index}.h5')
         self.model = self.build_generator()
         self.model.load_weights(file_path)
     

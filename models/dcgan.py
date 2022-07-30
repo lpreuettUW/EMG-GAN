@@ -90,11 +90,11 @@ class DCGAN:
         self.combined = Model(z, valid)
         self.combined.compile(loss='binary_crossentropy', optimizer=self.optimizer)
     
-    def save_critic(self, output_dir, index = -1):
-        self.critic.save(output_dir, index)
+    def save_critic(self, output_dir, epoch, index = -1):
+        self.critic.save(output_dir, epoch, index)
     
-    def save_generator(self, output_dir, index = -1):
-        self.generator.save(output_dir, index)
+    def save_generator(self, output_dir, epoch, index = -1):
+        self.generator.save(output_dir, epoch, index)
     
     def load(self, model_dir, index = -1):
         self.generator.load(model_dir, index)

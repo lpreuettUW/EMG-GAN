@@ -47,7 +47,7 @@ def plot_losses(metrics, epoch, output_dir):
 def plot_prediction(signal, output_dir, kfold, epoch = 0):
     plt.figure()
     axes = plt.gca()
-    axes.set_ylim([-1.0,1.0])
+    #axes.set_ylim([-1.0,1.0])
     plt.plot(signal[0], label='Generated Signal')
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')
@@ -59,7 +59,7 @@ def plot_prediction(signal, output_dir, kfold, epoch = 0):
 def plot_reference(signal, output_dir, kfold, epoch):
     plt.figure()
     axes = plt.gca()
-    axes.set_ylim([-1.0,1.0])
+    #axes.set_ylim([-1.0,1.0])
     plt.plot(signal[0], label='Reference Signal')
     plt.xlabel('Epoch' + str(epoch))
     plt.ylabel('EMG')

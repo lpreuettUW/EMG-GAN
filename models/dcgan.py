@@ -129,8 +129,12 @@ class DCGAN:
         self.generator.save(output_dir, epoch, index)
     
     def load(self, model_dir, finger, index = -1):
-        self.generator.load(model_dir, self.best_models[(finger, index)], index)
-        self.critic.load(model_dir, self.best_models[(finger, index)], index)
+        best_model_epoch = self.best_models[(finger, index)]
+
+        print(f'loading model for epoch {best_model_epoch} and k {index}')
+
+        self.generator.load(model_dir, best_model_epoch, index)
+        self.critic.load(model_dir, best_model_epoch, index)
 
     
     def save_sample(self, output_dir, epoch, kfold, signals):

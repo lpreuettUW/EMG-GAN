@@ -16,21 +16,22 @@ def generate(args):
         data_loader.load_fold(k)
 
         # Create a new DCGAN object
-        dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.data_dir)
+        dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.model_dir)
 
         # Load existing model from saved_models folder (you can pass different indexes to see the effect on the generated signal)
-        dcgan.load(args.data_dir, args.finger, k) #loads the last trained generator
+        dcgan.load(args.model_dir, args.finger, k) #loads the last trained generator
 
         noise = dcgan.generate_noise(data_loader.train_data)
         generated_signals = dcgan.predict(noise)
         generated_signals = data_loader.unnormalize(generated_signals)
-        np.savetxt(os.path.join(args.data_dir, f'generated_signals_k{k}'), generated_signals)
+        np.savetxt(os.path.join(args.model_dir, f'generated_signals_k{k}'), generated_signals)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Generate EMG signals based on pre-trained model')
 
     parser.add_argument('data_dir', help='input data directory', type=str)
+    parser.add_argument('model_dir', help='model directory', type=str)
     parser.add_argument('--dataset', type=str, choices=['JL', 'JY', 'LP', 'VB'], default='JL')  # JL JY LP VB
     parser.add_argument('--finger', type=str, choices=['Index', 'Middle', 'Ring', 'Pinky', 'Thumb'])
     parser.add_argument('--gpu', help='set CUDA_VISIBLE_DEVICES environment variable', type=str, default=None)
@@ -42,8 +43,8 @@ if __name__ == "__main__":
     if args.gpu is not None:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
-    args.data_dir = os.path.join(args.data_dir, args.dataset, args.finger)
-    if not os.path.isdir(args.data_dir):
-        raise ValueError(f'data path DNE: {args.data_dir}')
+    args.model_dir = os.path.join(args.model_dir, args.dataset, args.finger)
+    if not os.path.isdir(args.model_dir):
+        raise ValueError(f'data path DNE: {args.model_dir}')
 
     generate(args)

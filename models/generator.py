@@ -114,9 +114,10 @@ class Generator:
             print('Generator model:')
             model.summary()
             model_json = model.to_json()
-            
-            with open(os.path.join(output_dir, 'generator.json'), "w") as json_file:
-                json_file.write(model_json)
+
+            if output_dir is not None:
+                with open(os.path.join(output_dir, 'generator.json'), "w") as json_file:
+                    json_file.write(model_json)
                 
             #file_name = './output/generator.png'
             #plot_model(model, to_file=file_name, show_shapes = True)
@@ -135,7 +136,7 @@ class Generator:
             file_path = os.path.join(import_dir, f'generator_{epoch}.h5')
         else:
             file_path = os.path.join(import_dir, f'generator_{epoch}_k{index}.h5')
-        self.model = self.build_generator()
+        self.model = self.build_generator(None)
         self.model.load_weights(file_path)
     
     def predict(self, args):

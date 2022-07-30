@@ -22,7 +22,7 @@ def generate(args):
         dcgan.load(args.model_dir, args.finger, k) #loads the last trained generator
 
         noise = dcgan.generate_noise(data_loader.train_data)
-        generated_signals = dcgan.predict(noise)
+        generated_signals = dcgan.generator.predict(noise)
         generated_signals = data_loader.unnormalize(generated_signals)
         np.savetxt(os.path.join(args.model_dir, f'generated_signals_k{k}'), generated_signals)
 

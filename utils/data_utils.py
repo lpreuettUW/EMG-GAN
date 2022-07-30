@@ -25,7 +25,7 @@ class DataLoader():
         # TODO: we should train and generate samples in one go maybe?? or write a dataframe / np.arrays with samples and norm values for generation
 
         train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
-        #train_data = np.vectorize(normalize_seq, signature='(n)->(k)')(train_data)
+        train_data = np.vectorize(normalize_seq, signature='(n)->(k)')(train_data)
 
         # data_norms = np.empty((train_data.shape[0], 2))
         # for i in range(train_data.shape[0]):

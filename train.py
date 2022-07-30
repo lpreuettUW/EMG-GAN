@@ -102,7 +102,7 @@ def train(args):
                         dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
                         dcgan.save_critic(args.output_dir, epoch, kfold_k)
                         dcgan.save_generator(args.output_dir, epoch, kfold_k)
-                    if (best_g_loss is not None and g_loss - best_g_loss > 0.25) or (best_dtw is not None and dtw_metric - best_dtw > 10):
+                    if (best_dtw is not None and dtw_metric - best_dtw > 10): #(best_g_loss is not None and g_loss - best_g_loss > 0.25) or (best_dtw is not None and dtw_metric - best_dtw > 10):
                         print('early stopping because model is not improving')
                         early_stop = True
 

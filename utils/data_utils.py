@@ -32,7 +32,7 @@ class DataLoader():
         self.data_norms = data_norms
 
     def unnormalize(self, signals):
-        if signals.shape != self.train_data.shape:
+        if signals.shape != self.train_data.shape[:-1]:
             raise ValueError(f'cannot unnormalize array with shape {signals.shape}. Expected shape {self.train_data.shape}')
 
         unnormed_signals = np.empty_like(signals)

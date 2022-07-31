@@ -41,6 +41,7 @@ class DataLoader():
             print('prev val:', signals[i])
             min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
 
+            print('og val', signals[0, -1])
             print(signals[0, -1] * (max_val - min_val) + min_val)
             raise ValueError('error')
 

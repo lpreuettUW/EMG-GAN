@@ -37,8 +37,11 @@ class DataLoader():
 
         unnormed_signals = np.empty_like(signals)
         for i in range(signals.shape[0]):
+            print('prev val:', signals[i])
             min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
+            print(f'min val: {min_val} max val: {max_val}')
             unnormed_signals[i] = signals[i] * (max_val - min_val) + min_val
+            print('unnormed val:', unnormed_signals[i])
 
         return unnormed_signals
 

@@ -99,7 +99,7 @@ def train(args):
                 g_loss = dcgan.combined.train_on_batch(noise, valid) #train combined model
 
                 d_losses.append(d_loss[0])
-                d_accs.append(d_accs[0])
+                d_accs.append(d_loss[1])
                 g_losses.append(g_loss)
                 fft_metrics.append(fft_metric)
                 dtw_metrics.append(dtw_metric)

@@ -35,13 +35,14 @@ class DataLoader():
         if signals.shape != self.train_data.shape[:-1]:
             raise ValueError(f'cannot unnormalize array with shape {signals.shape}. Expected shape {self.train_data.shape}')
 
-        unnormed_signals = np.empty_like(signals, dtype=np.float)
+        unnormed_signals = np.empty_like(signals)
 
         for i in range(signals.shape[0]):
             print('prev val:', signals[i])
             min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
 
             print('og val', signals[0, -1])
+            print(f'min val {min_val} max val {max_val} delta {max_val - min_val}')
             print(signals[0, -1] * (max_val - min_val) + min_val)
             raise ValueError('error')
 

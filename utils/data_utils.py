@@ -26,7 +26,7 @@ class DataLoader():
 
         data_norms = np.empty((train_data.shape[0], 2))
         for i in range(train_data.shape[0]):
-            train_data[i], data_norms[0], data_norms[1] = normalize_seq(train_data[0])
+            train_data[i], data_norms[0, 0], data_norms[0, 1] = normalize_seq(train_data[0])
 
         self.train_data = np.expand_dims(train_data, axis=2)
         self.data_norms = data_norms

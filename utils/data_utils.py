@@ -37,6 +37,7 @@ class DataLoader():
 
         unnormed_signals = np.empty_like(signals, dtype=np.float)
         print(f'unnormed sigs dtype {unnormed_signals.dtype}')
+        print(f'data norms dtype {self.data_norms.dtype}')
         raise ValueError('error')
         for i in range(signals.shape[0]):
             print('prev val:', signals[i])

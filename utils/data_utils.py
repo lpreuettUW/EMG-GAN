@@ -7,6 +7,11 @@ import pandas as pd
 from utils.pickled_data_utilities import load_pickled_data, get_train_val_split_for_fold
 #from sklearn.preprocessing import MinMaxScaler
 
+class NormalizationValues():
+  def __init__(self, min_val: float, max_val: float):
+    self.min_val = min_val
+    self.max_val = max_val
+
 class DataLoader():
     def __init__(self, args):
         self.noise_dim = args.noise_dim
@@ -14,6 +19,10 @@ class DataLoader():
         self.df = load_pickled_data(args.data_dir, args.dataset)
         self.df = self.df[self.df['class'] == args.finger] # filter by finger
         self.train_data = None
+
+    @staticmethod
+    def revert_normalization(seq: np.array, min_val: float, max_val: float) -> np.array:
+        return seq * (max_val - min_val) + min_val
 
     def load_fold(self, fold: int):
         def normalize_seq(seq: np.array) -> np.array:
@@ -24,15 +33,25 @@ class DataLoader():
         train_data, train_lbls, val_data, val_lbls = get_train_val_split_for_fold(self.df, fold)
         #train_data = np.vectorize(normalize_seq, signature='(n)->(k)')(train_data)
 
-        data_norms = np.empty((train_data.shape[0], 2))
-        for i in range(train_data.shape[0]):
-            train_data[i], min_val, max_val = normalize_seq(train_data[0])
-            print(f'min_val {min_val} max_val {max_val}')
-            data_norms[0, 0], data_norms[0, 1] = min_val, max_val
+        # data_norms = np.empty((train_data.shape[0], 2))
+        # for i in range(train_data.shape[0]):
+        #     train_data[i], min_val, max_val = normalize_seq(train_data[i])
+        #     print(f'min_val {min_val} max_val {max_val}')
+        #     data_norms[0, 0], data_norms[0, 1] = min_val, max_val
 
+        norm_param_list = np.empty((train_data.shape[0]), dtype=object)
+        normed_data = np.empty_like(train_data)
+        reverted_data = np.empty_like(train_data)
+        for i in range(train_data.shape[0]):
+            normed_data[i], min_val, max_val = normalize_seq(train_data[i])
+            norm_param_list[i] = NormalizationValues(min_val, max_val)
+            reverted_data[i] = DataLoader.revert_normalization(normed_data[i], min_val, max_val)
+
+        assert np.allclose(train_data, reverted_data)
+        train_data = normed_data
 
         self.train_data = np.expand_dims(train_data, axis=2)
-        self.data_norms = data_norms
+        self.norm_param_list = norm_param_list
 
     def unnormalize(self, signals):
         if signals.shape != self.train_data.shape[:-1]:
@@ -42,14 +61,14 @@ class DataLoader():
 
         for i in range(signals.shape[0]):
             #print('prev val:', signals[i])
-            min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
+            norm_params = self.norm_param_list[i]
 
             print('og val', signals[0, -1])
             print(f'min val {min_val} max val {max_val} delta {max_val - min_val} data norm dtype {self.data_norms.dtype}')
-            print(signals[0, -1] * (max_val - min_val) + min_val)
+            print(DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val))
             raise ValueError('error')
 
-            unnormed_signals[i] = signals[i] * (max_val - min_val) + min_val
+            unnormed_signals[i] = DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val)
             #print('unnormed val:', unnormed_signals[i])
 
         return unnormed_signals

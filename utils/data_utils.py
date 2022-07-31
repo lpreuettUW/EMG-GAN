@@ -26,7 +26,10 @@ class DataLoader():
 
         data_norms = np.empty((train_data.shape[0], 2))
         for i in range(train_data.shape[0]):
-            train_data[i], data_norms[0, 0], data_norms[0, 1] = normalize_seq(train_data[0])
+            train_data[i], min_val, max_val = normalize_seq(train_data[0])
+            print(f'min_val {min_val} max_val {max_val}')
+            data_norms[0, 0], data_norms[0, 1] = min_val, max_val
+
 
         self.train_data = np.expand_dims(train_data, axis=2)
         self.data_norms = data_norms
@@ -38,7 +41,7 @@ class DataLoader():
         unnormed_signals = np.empty_like(signals)
 
         for i in range(signals.shape[0]):
-            print('prev val:', signals[i])
+            #print('prev val:', signals[i])
             min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
 
             print('og val', signals[0, -1])
@@ -47,7 +50,7 @@ class DataLoader():
             raise ValueError('error')
 
             unnormed_signals[i] = signals[i] * (max_val - min_val) + min_val
-            print('unnormed val:', unnormed_signals[i])
+            #print('unnormed val:', unnormed_signals[i])
 
         return unnormed_signals
 

@@ -31,6 +31,14 @@ def train(args):
 
         for epoch in range(args.num_epochs):
             data_loader.shuffle()
+
+            d_losses = []
+            d_accs = []
+            g_losses = []
+            fft_metrics = []
+            dtw_metrics = []
+            cc_metrics = []
+
             for signals in data_loader.get_batches():
                 # Adversarial ground truths
                 valid = np.ones((signals.shape[0], 1))
@@ -90,9 +98,12 @@ def train(args):
                 # ---------------------
                 g_loss = dcgan.combined.train_on_batch(noise, valid) #train combined model
 
-                # Plot the progress
-                print("%d [D loss: %f, acc: %f] [G loss: %f] [FFT Metric: %f] [DTW Metric: %f] [CC Metric: %f]" % (epoch, d_loss[0], d_loss[1], g_loss, fft_metric, dtw_metric, cc_metric[0]))
-                metrics.append([[d_loss[0]], [g_loss], [fft_metric], [dtw_metric], [cc_metric[0]]])
+                d_losses.append(d_loss[0])
+                d_accs.append(d_accs[0])
+                g_losses.append(g_loss)
+                fft_metrics.append(fft_metric)
+                dtw_metrics.append(dtw_metric)
+                cc_metrics.append(cc_metric[0])
 
                 early_stop = False
                 # If at save interval => save generated image samples
@@ -102,28 +113,21 @@ def train(args):
                         dcgan.save_sample(args.output_dir, epoch, kfold_k, signals)
                         dcgan.save_critic(args.output_dir, epoch, kfold_k)
                         dcgan.save_generator(args.output_dir, epoch, kfold_k)
-            #         if (best_dtws is not None and dtw_metric - np.mean(best_dtws) > 10): #(best_g_loss is not None and g_loss - best_g_loss > 0.25) or (best_dtw is not None and dtw_metric - best_dtw > 10):
-            #             print('early stopping because model is not improving')
-            #             early_stop = True
-            #
-            #         if best_g_loss is None or best_g_loss > g_loss:
-            #             best_g_loss = g_loss
-            #         if best_dtws is None:
-            #             best_dtws = [dtw_metric]
-            #         elif len(best_dtws) < 10:
-            #             best_dtws.append(dtw_metric)
-            #         else:
-            #             best_dtws[epoch % 10] = dtw_metric
-            #
-            #     if early_stop:
-            #         break
-            # if early_stop:
-            #     break
+
+            d_loss = sum(d_losses) / len(d_losses)
+            d_acc = sum(d_accs) / len(d_accs)
+            g_loss = sum(g_losses) / len(g_losses)
+            fft_metric = sum(fft_metrics) / len(fft_metrics)
+            dtw_metric = sum(dtw_metrics) / len(dtw_metrics)
+            cc_metric = sum(cc_metrics) / len(cc_metrics)
+            # Plot the progress
+            print("%d [D loss: %f, acc: %f] [G loss: %f] [FFT Metric: %f] [DTW Metric: %f] [CC Metric: %f]" % (epoch, d_loss, d_acc, g_loss, fft_metric, dtw_metric, cc_metric))
+            metrics.append([[d_loss], [g_loss], [fft_metric], [dtw_metric], [cc_metric]])
 
         #dcgan.save_sample(args.output_dir, epoch, signals)
         #dcgan.save_critic(args.output_dir, kfold_k)
         #dcgan.save_generator(args.output_dir, kfold_k)
-        plot_losses(metrics, epoch, args.output_dir)
+        plot_losses(metrics, epoch, kfold_k, args.output_dir)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='EMG-GAN - Train')

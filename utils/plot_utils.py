@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def plot_losses(metrics, epoch, output_dir):
+def plot_losses(metrics, epoch, kfold, output_dir):
     losses = np.array(metrics)
     plt.plot(losses[:,0], label='Discriminator')
     plt.plot(losses[:,1], label='Generator')
@@ -10,7 +10,7 @@ def plot_losses(metrics, epoch, output_dir):
     plt.xlabel('Epoch')
     plt.ylabel('Loss/Metric')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'Losses_{}.png'.format(epoch)))
+    plt.savefig(os.path.join(output_dir, 'Losses_{}_kfold{}.png'.format(epoch, kfold)))
     #plt.show()
     plt.close()
             
@@ -20,7 +20,7 @@ def plot_losses(metrics, epoch, output_dir):
     plt.xlabel('Epoch')
     plt.ylabel('FFT MSE')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'FFT_{}.png'.format(epoch)))
+    plt.savefig(os.path.join(output_dir, 'FFT_{}_kfold{}.png'.format(epoch, kfold)))
     #plt.show()
     plt.close()
     
@@ -30,7 +30,7 @@ def plot_losses(metrics, epoch, output_dir):
     plt.xlabel('Epoch')
     plt.ylabel('DTW Distance')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'DTW_{}.png'.format(epoch)))
+    plt.savefig(os.path.join(output_dir, 'DTW_{}_kfold{}.png'.format(epoch, kfold)))
     #plt.show()
     plt.close()
     
@@ -40,7 +40,7 @@ def plot_losses(metrics, epoch, output_dir):
     plt.xlabel('Epoch')
     plt.ylabel('Cross-correlation')
     plt.legend()
-    plt.savefig(os.path.join(output_dir, 'Cross_correlation_{}.png'.format(epoch)))
+    plt.savefig(os.path.join(output_dir, 'Cross_correlation_{}_kfold{}.png'.format(epoch, kfold)))
     #plt.show()
     plt.close()
         

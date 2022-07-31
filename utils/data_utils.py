@@ -77,7 +77,7 @@ class DataLoader():
         np.random.shuffle(self.train_data)
 
     def get_batches(self):
-        num_batches = int(np.ceil(self.train_data.shape[0] / self.batch_size))
+        num_batches = self.get_num_batches_per_epoch()
         for batch_idx in range(num_batches):
             batch_start_idx = self.batch_size * batch_idx
             if batch_idx < num_batches - 1:
@@ -87,6 +87,9 @@ class DataLoader():
 
     def get_target_seq_len(self):
         return np.vstack(self.df['padded_data'].to_numpy()).shape[1]
+
+    def get_num_batches_per_epoch(self):
+        return int(np.ceil(self.train_data.shape[0] / self.batch_size))
 
 # class DataLoader():
 #     def __init__(self, args):

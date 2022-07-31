@@ -42,7 +42,7 @@ class DataLoader():
             min_val, max_val = self.data_norms[i, 0], self.data_norms[i, 1]
 
             print('og val', signals[0, -1])
-            print(f'min val {min_val} max val {max_val} delta {max_val - min_val}')
+            print(f'min val {min_val} max val {max_val} delta {max_val - min_val} data norm dtype {self.data_norms.dtype}')
             print(signals[0, -1] * (max_val - min_val) + min_val)
             raise ValueError('error')
 

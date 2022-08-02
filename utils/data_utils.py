@@ -63,10 +63,10 @@ class DataLoader():
             #print('prev val:', signals[i])
             norm_params = self.norm_param_list[i]
 
-            print('og val', signals[0, -1])
-            print(f'min val {norm_params.min_val} max val {norm_params.max_val} delta {norm_params.max_val - norm_params.min_val}')
-            print(DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val))
-            raise ValueError('error')
+            # print('og val', signals[0, -1])
+            # print(f'min val {norm_params.min_val} max val {norm_params.max_val} delta {norm_params.max_val - norm_params.min_val}')
+            # print(DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val))
+            # raise ValueError('error')
 
             unnormed_signals[i] = DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val)
             #print('unnormed val:', unnormed_signals[i])

@@ -64,7 +64,7 @@ class DataLoader():
             norm_params = self.norm_param_list[i]
 
             print('og val', signals[0, -1])
-            print(f'min val {min_val} max val {max_val} delta {max_val - min_val} data norm dtype {self.data_norms.dtype}')
+            print(f'min val {norm_params.min_val} max val {norm_params.max_val} delta {norm_params.max_val - norm_params.min_val}')
             print(DataLoader.revert_normalization(signals[i], norm_params.min_val, norm_params.max_val))
             raise ValueError('error')
 

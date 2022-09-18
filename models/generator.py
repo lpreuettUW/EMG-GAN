@@ -78,7 +78,7 @@ class Generator:
         return mvg_avg
     
     def build_generator(self, output_dir):
-
+        # TODO: maybe try messing with # of neurons here
         model = Sequential()
         model.add(Reshape((self.noise_dim,self.channels), input_shape=(self.noise_dim,)))
         model.add(Conv1D(128, kernel_size=4, padding="same", data_format="channels_last"))

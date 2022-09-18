@@ -26,6 +26,15 @@ def train(args):
         # Create a new DCGAN object
         dcgan = DCGAN(args.noise_dim, int(data_loader.get_target_seq_len()), args.output_dir, training=True)
 
+        print('Generator Summary:\n', dcgan.generator.summary())
+
+        print('\n\n\n\n\n')
+
+        print('Discriminator Summary:\n', dcgan.critic.summary())
+
+        import sys
+        sys.exit()
+
         metrics = []
         #best_g_loss = best_dtws = None
 
